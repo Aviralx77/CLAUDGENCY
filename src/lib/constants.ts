@@ -1,5 +1,5 @@
 export const CATEGORIES = [
-  "Sales",
+  "Sales & Outreach",
   "Marketing", 
   "Technical",
   "GTM",
@@ -11,7 +11,8 @@ export const CATEGORIES = [
 
 export type Category = typeof CATEGORIES[number];
 
-export const CATEGORY_COLORS: Record<Category, string> = {
+export const CATEGORY_COLORS: Record<string, string> = {
+  "Sales & Outreach": "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   "Sales": "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
   "Marketing": "bg-blue-500/20 text-blue-400 border-blue-500/30",
   "Technical": "bg-purple-500/20 text-purple-400 border-purple-500/30",
