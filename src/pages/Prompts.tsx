@@ -1,5 +1,5 @@
-import { useState, useMemo, useEffect } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useState, useMemo, useEffect, useCallback } from "react";
+import { useSearchParams, Link, useNavigate } from "react-router-dom";
 import { usePrompts, Prompt } from "@/hooks/usePrompts";
 import { useEmailCapture } from "@/hooks/useEmailCapture";
 import { useCursorGlow } from "@/hooks/useCursorGlow";
@@ -20,12 +20,15 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowLeft, Filter, Sparkles } from "lucide-react";
 
 export default function Prompts() {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const [contentKey, setContentKey] = useState(0);
 
   const cursorPosition = useCursorGlow();
   const { data: prompts, isLoading } = usePrompts();
@@ -40,10 +43,22 @@ export default function Prompts() {
 
   // Page entrance animation
   useEffect(() => {
-    setIsVisible(true);
+    const timer = setTimeout(() => setIsVisible(true), 50);
+    return () => clearTimeout(timer);
   }, []);
 
+  // Handle back navigation with exit animation
+  const handleBack = useCallback(() => {
+    setIsExiting(true);
+    setTimeout(() => {
+      navigate("/");
+    }, 400);
+  }, [navigate]);
+
   const setSelectedCategory = (category: string | null) => {
+    // Trigger content transition
+    setContentKey(prev => prev + 1);
+    
     if (category) {
       setSearchParams({ category });
     } else {
@@ -91,18 +106,26 @@ export default function Prompts() {
       <div className="pointer-events-none fixed top-0 right-0 w-[400px] h-[400px] bg-[hsl(27,95%,45%)] rounded-full blur-[180px] opacity-10 z-0" />
       <div className="pointer-events-none fixed bottom-0 left-0 w-[500px] h-[500px] bg-[hsl(20,90%,40%)] rounded-full blur-[200px] opacity-10 z-0" />
 
-      <div className={`relative z-10 transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div 
+        className={`relative z-10 transition-all duration-500 ease-out ${
+          isExiting 
+            ? 'opacity-0 translate-x-8 scale-[0.98]' 
+            : isVisible 
+              ? 'opacity-100 translate-x-0 scale-100' 
+              : 'opacity-0 -translate-x-8 scale-[0.98]'
+        }`}
+      >
         {/* Header */}
         <header className="sticky top-0 z-40 border-b border-[hsl(27,30%,15%)] bg-[hsl(0,0%,4%)]/90 backdrop-blur-md">
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link
-                to="/"
-                className="flex items-center gap-2 text-[hsl(0,0%,50%)] hover:text-[hsl(0,0%,90%)] transition-colors"
+              <button
+                onClick={handleBack}
+                className="flex items-center gap-2 text-[hsl(0,0%,50%)] hover:text-[hsl(0,0%,90%)] transition-colors group"
               >
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                 <span className="hidden sm:inline">Back</span>
-              </Link>
+              </button>
               <div className="h-4 w-px bg-[hsl(27,30%,20%)]" />
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-[hsl(27,95%,60%)]" />
@@ -171,50 +194,55 @@ export default function Prompts() {
                 </p>
               </div>
 
-              {/* Prompts Grid */}
-              {isLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="p-5 rounded-xl border border-[hsl(27,30%,15%)] bg-[hsl(0,0%,8%)]/60">
-                      <Skeleton className="h-6 w-20 mb-3 bg-[hsl(0,0%,15%)]" />
-                      <Skeleton className="h-5 w-full mb-2 bg-[hsl(0,0%,15%)]" />
-                      <Skeleton className="h-4 w-3/4 mb-4 bg-[hsl(0,0%,15%)]" />
-                      <Skeleton className="h-8 w-28 bg-[hsl(0,0%,15%)]" />
-                    </div>
-                  ))}
-                </div>
-              ) : filteredPrompts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredPrompts.map((prompt, index) => (
-                    <div
-                      key={prompt.id}
-                      className="animate-fade-in"
-                      style={{ animationDelay: `${index * 50}ms` }}
+              {/* Prompts Grid with category transition */}
+              <div 
+                key={contentKey}
+                className="animate-fade-in"
+              >
+                {isLoading ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="p-5 rounded-xl border border-[hsl(27,30%,15%)] bg-[hsl(0,0%,8%)]/60">
+                        <Skeleton className="h-6 w-20 mb-3 bg-[hsl(0,0%,15%)]" />
+                        <Skeleton className="h-5 w-full mb-2 bg-[hsl(0,0%,15%)]" />
+                        <Skeleton className="h-4 w-3/4 mb-4 bg-[hsl(0,0%,15%)]" />
+                        <Skeleton className="h-8 w-28 bg-[hsl(0,0%,15%)]" />
+                      </div>
+                    ))}
+                  </div>
+                ) : filteredPrompts.length > 0 ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {filteredPrompts.map((prompt, index) => (
+                      <div
+                        key={prompt.id}
+                        className="animate-fade-in"
+                        style={{ animationDelay: `${Math.min(index * 30, 300)}ms` }}
+                      >
+                        <PromptCard
+                          prompt={prompt}
+                          onView={handleViewPrompt}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <p className="text-[hsl(0,0%,50%)] text-lg">
+                      No prompts found matching your criteria.
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSearchQuery("");
+                        setSelectedCategory(null);
+                      }}
+                      className="mt-4 border-[hsl(27,30%,20%)] text-[hsl(27,95%,60%)] hover:bg-[hsl(27,95%,50%)]/10"
                     >
-                      <PromptCard
-                        prompt={prompt}
-                        onView={handleViewPrompt}
-                      />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <p className="text-[hsl(0,0%,50%)] text-lg">
-                    No prompts found matching your criteria.
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setSearchQuery("");
-                      setSelectedCategory(null);
-                    }}
-                    className="mt-4 border-[hsl(27,30%,20%)] text-[hsl(27,95%,60%)] hover:bg-[hsl(27,95%,50%)]/10"
-                  >
-                    Clear filters
-                  </Button>
-                </div>
-              )}
+                      Clear filters
+                    </Button>
+                  </div>
+                )}
+              </div>
             </main>
           </div>
         </div>
