@@ -10,10 +10,10 @@ export function CategoriesPreview() {
     <section id="categories" className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-[hsl(0,0%,95%)] mb-4">
             Prompts for Every Use Case
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-[hsl(0,0%,55%)] text-lg max-w-2xl mx-auto">
             From sales outreach to technical documentation, we've got you covered.
           </p>
         </div>
@@ -23,7 +23,7 @@ export function CategoriesPreview() {
             <Link
               key={category}
               to={`/prompts?category=${encodeURIComponent(category)}`}
-              className="group p-6 rounded-xl border border-border/50 bg-card/50 hover:bg-card hover:border-primary/30 transition-all"
+              className="group p-6 rounded-xl border border-[hsl(27,30%,18%)] bg-[hsl(0,0%,8%)]/60 hover:bg-[hsl(0,0%,10%)] hover:border-[hsl(27,95%,50%)]/40 transition-all duration-300 backdrop-blur-sm"
             >
               <div className="flex items-center justify-between mb-3">
                 <span
@@ -31,12 +31,12 @@ export function CategoriesPreview() {
                 >
                   {category}
                 </span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="w-4 h-4 text-[hsl(0,0%,50%)] group-hover:text-[hsl(27,95%,60%)] group-hover:translate-x-1 transition-all" />
               </div>
-              <div className="text-2xl font-bold text-foreground">
+              <div className="text-2xl font-bold text-[hsl(0,0%,95%)]">
                 {categoryCounts?.[category] ?? 0}
               </div>
-              <div className="text-sm text-muted-foreground">prompts</div>
+              <div className="text-sm text-[hsl(0,0%,50%)]">prompts</div>
             </Link>
           ))}
         </div>
