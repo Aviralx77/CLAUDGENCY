@@ -18,13 +18,13 @@ export function CategorySidebar({
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="font-semibold text-foreground">Categories</h3>
+        <h3 className="font-semibold text-[hsl(0,0%,95%)]">Categories</h3>
         {selectedCategory && (
           <Button
             variant="ghost"
             size="sm"
             onClick={() => onSelectCategory(null)}
-            className="h-8 px-2 text-muted-foreground hover:text-foreground"
+            className="h-8 px-2 text-[hsl(0,0%,50%)] hover:text-[hsl(0,0%,90%)] hover:bg-[hsl(0,0%,15%)]"
           >
             <X className="w-4 h-4 mr-1" />
             Clear
@@ -35,10 +35,10 @@ export function CategorySidebar({
       <button
         onClick={() => onSelectCategory(null)}
         className={cn(
-          "w-full text-left px-3 py-2 rounded-lg transition-colors",
+          "w-full text-left px-3 py-2 rounded-lg transition-all duration-200",
           selectedCategory === null
-            ? "bg-primary/10 text-primary"
-            : "text-muted-foreground hover:bg-card hover:text-foreground"
+            ? "bg-[hsl(27,95%,50%)]/15 text-[hsl(27,95%,60%)]"
+            : "text-[hsl(0,0%,55%)] hover:bg-[hsl(0,0%,12%)] hover:text-[hsl(0,0%,90%)]"
         )}
       >
         <div className="flex items-center justify-between">
@@ -56,10 +56,10 @@ export function CategorySidebar({
           key={category}
           onClick={() => onSelectCategory(category)}
           className={cn(
-            "w-full text-left px-3 py-2 rounded-lg transition-colors",
+            "w-full text-left px-3 py-2 rounded-lg transition-all duration-200",
             selectedCategory === category
-              ? "bg-primary/10 text-primary"
-              : "text-muted-foreground hover:bg-card hover:text-foreground"
+              ? "bg-[hsl(27,95%,50%)]/15 text-[hsl(27,95%,60%)]"
+              : "text-[hsl(0,0%,55%)] hover:bg-[hsl(0,0%,12%)] hover:text-[hsl(0,0%,90%)]"
           )}
         >
           <div className="flex items-center justify-between">

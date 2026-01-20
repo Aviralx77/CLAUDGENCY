@@ -51,7 +51,7 @@ export function HeroSection() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in">
-          <Button asChild size="lg" className="text-lg px-8 py-6 group bg-gradient-to-r from-[hsl(27,95%,50%)] to-[hsl(20,90%,45%)] hover:from-[hsl(27,95%,55%)] hover:to-[hsl(20,90%,50%)] border-0 text-[hsl(0,0%,100%)]">
+          <Button asChild size="lg" className="text-lg px-8 py-6 group bg-gradient-to-r from-[hsl(27,95%,50%)] to-[hsl(20,90%,45%)] hover:from-[hsl(27,95%,55%)] hover:to-[hsl(20,90%,50%)] border-0 text-[hsl(0,0%,100%)] transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(234,88,12,0.4)]">
             <Link to="/prompts">
               Browse All Prompts
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -61,9 +61,17 @@ export function HeroSection() {
             asChild
             variant="outline"
             size="lg"
-            className="text-lg px-8 py-6 border-[hsl(27,50%,30%)] text-[hsl(27,95%,60%)] hover:bg-[hsl(27,95%,50%)]/10 hover:border-[hsl(27,95%,50%)]"
+            className="text-lg px-8 py-6 border-[hsl(27,50%,30%)] text-[hsl(27,95%,60%)] hover:bg-[hsl(27,95%,50%)]/10 hover:border-[hsl(27,95%,50%)] transition-all duration-500 hover:scale-105"
           >
-            <a href="#categories">View Categories</a>
+            <a 
+              href="#categories"
+              onClick={(e) => {
+                e.preventDefault();
+                document.getElementById('categories')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            >
+              View Categories
+            </a>
           </Button>
         </div>
       </div>
