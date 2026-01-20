@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const PROMPT_VIEW_KEY = "prompt_views";
 const SUBSCRIBED_KEY = "email_subscribed";
-const VIEWS_BEFORE_MODAL = 3;
+const MODAL_INTERVAL = 5;
 
 export function useEmailCapture() {
   const [showModal, setShowModal] = useState(false);
@@ -21,7 +21,8 @@ export function useEmailCapture() {
     const newViews = views + 1;
     localStorage.setItem(PROMPT_VIEW_KEY, newViews.toString());
 
-    if (newViews >= VIEWS_BEFORE_MODAL) {
+    // Show modal every 5 prompts (5, 10, 15, 20, etc.)
+    if (newViews % MODAL_INTERVAL === 0) {
       setShowModal(true);
     }
   };
