@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { Sparkles, Mail, X } from "lucide-react";
+import { Sparkles, Mail } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface EmailCaptureModalProps {
@@ -69,43 +69,44 @@ export function EmailCaptureModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <button
-          onClick={() => onOpenChange(false)}
-          className="absolute right-4 top-4 text-muted-foreground hover:text-foreground"
-        >
-          <X className="w-4 h-4" />
-        </button>
+      <DialogContent className="sm:max-w-md bg-[hsl(0,0%,6%)] border-[hsl(27,30%,18%)] overflow-hidden">
+        {/* Ambient glow effects */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 bg-[hsl(27,95%,50%)] rounded-full blur-[100px] opacity-20 pointer-events-none" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[hsl(20,90%,40%)] rounded-full blur-[100px] opacity-15 pointer-events-none" />
 
-        <DialogHeader className="text-center">
-          <div className="mx-auto w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
-            <Sparkles className="w-7 h-7 text-primary" />
+        <DialogHeader className="text-center relative z-10">
+          <div className="mx-auto w-16 h-16 rounded-2xl bg-gradient-to-br from-[hsl(27,95%,50%)] to-[hsl(20,90%,40%)] flex items-center justify-center mb-4 shadow-[0_0_30px_rgba(234,88,12,0.4)]">
+            <Sparkles className="w-8 h-8 text-white" />
           </div>
-          <DialogTitle className="text-xl">
+          <DialogTitle className="text-2xl font-bold text-[hsl(0,0%,95%)]">
             Unlock All 250 Prompts
           </DialogTitle>
-          <DialogDescription className="text-base">
+          <DialogDescription className="text-base text-[hsl(0,0%,60%)] mt-2">
             Get notified when we add new prompts and receive exclusive tips
             for maximizing Claude's potential.
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-6 relative z-10">
           <div className="relative">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(0,0%,50%)]" />
             <Input
               type="email"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10"
+              className="pl-10 bg-[hsl(0,0%,10%)] border-[hsl(27,30%,20%)] text-[hsl(0,0%,95%)] placeholder:text-[hsl(0,0%,40%)] focus:border-[hsl(27,95%,50%)] focus:ring-[hsl(27,95%,50%)]/20"
               disabled={loading}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button 
+            type="submit" 
+            className="w-full bg-gradient-to-r from-[hsl(27,95%,50%)] to-[hsl(20,90%,45%)] hover:from-[hsl(27,95%,55%)] hover:to-[hsl(20,90%,50%)] text-white font-semibold shadow-[0_0_20px_rgba(234,88,12,0.3)] hover:shadow-[0_0_30px_rgba(234,88,12,0.5)] transition-all duration-300" 
+            disabled={loading}
+          >
             {loading ? "Subscribing..." : "Get Free Access"}
           </Button>
-          <p className="text-xs text-center text-muted-foreground">
+          <p className="text-xs text-center text-[hsl(0,0%,45%)]">
             No spam, unsubscribe anytime.
           </p>
         </form>
